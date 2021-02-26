@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:journapi/auth/auth_controller.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:journapi/widgets/animated_logo.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginView extends StatelessWidget {
   final formKey = GlobalKey<FormState>();
@@ -12,30 +14,52 @@ class LoginView extends StatelessWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(backgroundColor: Colors.grey),
-          SliverToBoxAdapter(
-            child: Column(
+          SliverAppBar(
+            pinned: true,
+            backgroundColor: Color(0xfff7fafc),
+            title: Row(
               children: [
                 SvgPicture.asset(
                   'assets/images/logo.svg',
                   semanticsLabel: 'Journapi Logo',
-                  width: 150,
-                  height: 150,
+                  width: 30,
+                  height: 30,
                 ),
-                Container(
-                  width: 100,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    color: Colors.grey,
-                    borderRadius: BorderRadius.circular(30),
+                Text(
+                  'Journapi',
+                  style: TextStyle(
+                    fontFamily: 'JetBrainsMono',
+                    color: Colors.grey.shade800,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1,
                   ),
-                ),
+                )
+              ],
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                SizedBox(height: 64),
+                AnimatedLogo(),
+                SizedBox(height: 16),
+                Container(
+                    child: Text(
+                  'The techie bullet journal',
+                  style: TextStyle(
+                    fontFamily: 'JetBrainsMono',
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xff4a5568),
+                  ),
+                ))
               ],
             ),
           ),
           SliverToBoxAdapter(
             child: Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               child: Form(
                 key: formKey,
                 child: Column(
@@ -44,6 +68,14 @@ class LoginView extends StatelessWidget {
                       autocorrect: true,
                       minLines: 2,
                       maxLines: 3,
+                      decoration: const InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blueAccent),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                      ),
                       style: TextStyle(fontFamily: 'JetBrainsMono'),
                       controller: authController.tokenEditingController,
                       validator: (value) {
@@ -56,8 +88,7 @@ class LoginView extends StatelessWidget {
                     SizedBox(height: 20),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Color(0xff63b3ed),
-                      ),
+                          primary: Color(0xff63b3ed), elevation: 0),
                       onPressed: () {
                         if (!formKey.currentState.validate()) {
                           return;
@@ -89,7 +120,9 @@ class LoginView extends StatelessWidget {
                     ),
                     SizedBox(height: 20),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        launch('https://journapi.app/');
+                      },
                       child: Text(
                         'How to find API Key?',
                         style: TextStyle(fontFamily: 'JetBrainsMono'),
