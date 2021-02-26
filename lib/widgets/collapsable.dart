@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:journapi/widgets/animated_chevron.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:supercharged/supercharged.dart';
 
@@ -6,22 +8,29 @@ class Collapsible extends StatefulWidget {
   final String title;
   final Widget child;
   final bool hasChildBorder;
+  final bool openInitialized;
+
   Collapsible({
     Key key,
     @required this.title,
     @required this.child,
+    this.openInitialized = false,
     this.hasChildBorder = false,
   }) : super(key: key);
   @override
   _CollapsibleState createState() => _CollapsibleState();
 }
 
-class _CollapsibleState extends State<Collapsible> {
+class _CollapsibleState extends State<Collapsible>
+    with TickerProviderStateMixin {
   bool isOpened = false;
   bool isInitialized = true;
+  AnimationController animationController;
   @override
   void initState() {
-    isInitialized = false;
+    animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 150));
+    isOpened = widget.openInitialized;
     super.initState();
   }
 
@@ -32,7 +41,13 @@ class _CollapsibleState extends State<Collapsible> {
         children: [
           GestureDetector(
             onTap: () {
+              if (animationController.isAnimating) {
+                return;
+              }
               setState(() => isOpened = !isOpened);
+              animationController.isCompleted
+                  ? animationController.reverse()
+                  : animationController.forward();
             },
             child: Container(
               decoration: BoxDecoration(
@@ -50,7 +65,7 @@ class _CollapsibleState extends State<Collapsible> {
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 8.0),
+                          horizontal: 16.0, vertical: 12.0),
                       child: Text(
                         widget.title,
                         style: TextStyle(
@@ -63,11 +78,9 @@ class _CollapsibleState extends State<Collapsible> {
                   ),
                   IconButton(
                     splashRadius: 0.1,
-                    icon: Icon(
-                      isOpened
-                          ? Icons.keyboard_arrow_down_rounded
-                          : Icons.keyboard_arrow_up_rounded,
-                      color: Colors.white,
+                    icon: AnimatedChevron(
+                      controller: animationController,
+                      isInitialForwarded: isOpened,
                     ),
                     onPressed: () {
                       setState(() => isOpened = !isOpened);
