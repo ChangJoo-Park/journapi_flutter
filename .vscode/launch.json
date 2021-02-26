@@ -5,9 +5,15 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "journapi",
+      "name": "[DEV] journapi",
       "request": "launch",
       "type": "dart"
+    },
+    {
+      "name": "[RELEASE] journapi",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
     }
   ]
 }
