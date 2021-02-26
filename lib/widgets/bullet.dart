@@ -6,13 +6,13 @@ class Bullet extends StatefulWidget {
   const Bullet({
     Key key,
     @required this.bullet,
-    this.onSaveClicked,
-    this.onDeleteClicked,
+    @required this.onSaveClicked,
+    @required this.onDeleteClicked,
   }) : super(key: key);
 
   final Map bullet;
-  final Function(Map) onSaveClicked;
-  final Function(Map) onDeleteClicked;
+  final Function(int bulletId, String bullet, DateTime dateTime) onSaveClicked;
+  final Function(int bulletId) onDeleteClicked;
 
   @override
   _BulletState createState() => _BulletState();
@@ -22,19 +22,23 @@ class _BulletState extends State<Bullet> {
   final buttonColor = const Color(0xff4a5568);
   var timeString = '';
   var isEdit = false;
-
+  final formKey = GlobalKey<FormState>();
+  TextEditingController bulletEditingController;
+  DateTime selectedDate;
   @override
   void initState() {
-    DateTime datetime = DateTime.parse(widget.bullet['published_at']).toLocal();
-    String hour = datetime.hour.toString().length == 1
-        ? '0${datetime.hour}'
-        : '${datetime.hour}';
-    String minute = datetime.minute.toString().length == 1
-        ? '0${datetime.minute}'
-        : '${datetime.minute}';
-    String second = datetime.second.toString().length == 1
-        ? '0${datetime.second}'
-        : '${datetime.second}';
+    bulletEditingController =
+        TextEditingController(text: widget.bullet['bullet']);
+    selectedDate = DateTime.parse(widget.bullet['published_at']).toLocal();
+    String hour = selectedDate.hour.toString().length == 1
+        ? '0${selectedDate.hour}'
+        : '${selectedDate.hour}';
+    String minute = selectedDate.minute.toString().length == 1
+        ? '0${selectedDate.minute}'
+        : '${selectedDate.minute}';
+    String second = selectedDate.second.toString().length == 1
+        ? '0${selectedDate.second}'
+        : '${selectedDate.second}';
     timeString = '$hour:$minute:$second';
     super.initState();
   }
@@ -44,15 +48,20 @@ class _BulletState extends State<Bullet> {
     List<Widget> children = [];
 
     if (isEdit) {
-      DateTime selectedDate =
-          DateTime.parse(widget.bullet['published_at']).toLocal();
       children.addAll([
         Form(
+          key: formKey,
           child: Container(
             child: Column(
               children: [
                 TextFormField(
-                  initialValue: widget.bullet['bullet'],
+                  controller: bulletEditingController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'The bullet edit field is required';
+                    }
+                    return null;
+                  },
                   style: TextStyle(fontFamily: 'JetBrainsMono'),
                   decoration: const InputDecoration(
                     focusedBorder: OutlineInputBorder(
@@ -79,7 +88,9 @@ class _BulletState extends State<Bullet> {
                     suffixIcon: Icon(Icons.calendar_today),
                   ),
                   selectedDate: selectedDate,
-                  onDateSelected: (DateTime value) {},
+                  onDateSelected: (DateTime value) {
+                    setState(() => selectedDate = value);
+                  },
                 ),
               ],
             ),
@@ -92,7 +103,13 @@ class _BulletState extends State<Bullet> {
           children: [
             TextButton.icon(
               onPressed: () {
-                setState(() => isEdit = false);
+                if (formKey.currentState.validate()) {
+                  widget.onSaveClicked(widget.bullet['id'],
+                      bulletEditingController.text, selectedDate.toLocal());
+                  setState(() {
+                    isEdit = false;
+                  });
+                }
               },
               icon: SvgPicture.asset('assets/images/save.svg',
                   width: 20, height: 20),
@@ -132,8 +149,8 @@ class _BulletState extends State<Bullet> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
           child: Text(
-            widget.bullet['bullet'],
-            style: TextStyle(fontFamily: 'JetBrainsMono'),
+            widget.bullet['bullet'].replaceAll("\n", " "),
+            style: TextStyle(fontFamily: 'JetBrainsMono', fontSize: 16),
           ),
         ),
         ButtonBar(
@@ -156,7 +173,9 @@ class _BulletState extends State<Bullet> {
               ),
             ),
             TextButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                widget.onDeleteClicked(widget.bullet['id']);
+              },
               icon: SvgPicture.asset('assets/images/delete.svg',
                   width: 20, height: 20),
               label: Text(
