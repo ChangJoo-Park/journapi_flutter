@@ -100,6 +100,7 @@ class HomeView extends StatelessWidget {
                                     if (value == null || value.isEmpty) {
                                       return 'The bullet edit field is required';
                                     }
+                                    return null;
                                   },
                                 ),
                                 SizedBox(height: 8),
@@ -203,7 +204,7 @@ class HomeView extends StatelessWidget {
                                 },
                                 onSaveClicked: (int bulletId, String bullet,
                                     DateTime dateTime) {
-                                  controller.updateBullet(
+                                  return controller.updateBullet(
                                       bulletId, bullet, dateTime);
                                 },
                               );

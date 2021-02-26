@@ -29,9 +29,12 @@ class HomeController extends GetxController {
     });
   }
 
-  Future updateBullet(int bulletId, String bullet, DateTime publishedAt) {
-    return api.updateBullet(bulletId, bullet, publishedAt).then((value) {
+  Future<bool> updateBullet(int bulletId, String bullet, DateTime publishedAt) {
+    return api
+        .updateBullet(bulletId, bullet, publishedAt)
+        .then((Response response) {
       fetchBullets();
+      return response.isOk;
     });
   }
 

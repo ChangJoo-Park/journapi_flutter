@@ -1,6 +1,7 @@
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 class Bullet extends StatefulWidget {
   const Bullet({
@@ -11,8 +12,9 @@ class Bullet extends StatefulWidget {
   }) : super(key: key);
 
   final Map bullet;
-  final Function(int bulletId, String bullet, DateTime dateTime) onSaveClicked;
-  final Function(int bulletId) onDeleteClicked;
+  final Future<bool> Function(int bulletId, String bullet, DateTime dateTime)
+      onSaveClicked;
+  final Future<bool> Function(int bulletId) onDeleteClicked;
 
   @override
   _BulletState createState() => _BulletState();
@@ -25,6 +27,9 @@ class _BulletState extends State<Bullet> {
   final formKey = GlobalKey<FormState>();
   TextEditingController bulletEditingController;
   DateTime selectedDate;
+  String prevBullet;
+  DateTime prevDate;
+
   @override
   void initState() {
     bulletEditingController =
@@ -104,10 +109,23 @@ class _BulletState extends State<Bullet> {
             TextButton.icon(
               onPressed: () {
                 if (formKey.currentState.validate()) {
-                  widget.onSaveClicked(widget.bullet['id'],
-                      bulletEditingController.text, selectedDate.toLocal());
                   setState(() {
+                    prevBullet = widget.bullet['bullet'];
+                    prevDate =
+                        DateTime.parse(widget.bullet['published_at']).toLocal();
+                    widget.bullet['bullet'] = bulletEditingController.text;
+                    widget.bullet['published_at'] = selectedDate.toLocal();
                     isEdit = false;
+                  });
+
+                  widget
+                      .onSaveClicked(widget.bullet['id'],
+                          bulletEditingController.text, selectedDate.toLocal())
+                      .then((bool isOk) {
+                    if (!isOk) {
+                      widget.bullet['bullet'] = prevBullet;
+                      widget.bullet['published_at'] = prevDate;
+                    }
                   });
                 }
               },
