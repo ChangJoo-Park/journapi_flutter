@@ -1,4 +1,4 @@
-package com.example.journapi
+package com.changjoopark.journapi
 
 import io.flutter.embedding.android.FlutterActivity
 
