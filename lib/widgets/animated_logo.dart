@@ -25,7 +25,7 @@ class AnimatedLogo extends StatelessWidget {
           ),
         ),
         MirrorAnimation(
-          tween: Colors.grey.shade700.tweenTo(Colors.grey.shade400),
+          tween: Colors.black54.tweenTo(Colors.black12),
           curve: Curves.easeInOut,
           builder: (BuildContext context, Widget child, color) {
             return MirrorAnimation(
@@ -34,10 +34,12 @@ class AnimatedLogo extends StatelessWidget {
               builder: (BuildContext context, Widget child, width) {
                 return Container(
                   width: width,
-                  height: 16,
+                  height: 6,
                   decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Colors.grey.withOpacity(0.2), width: 2),
                     color: color,
-                    borderRadius: BorderRadius.circular(99),
+                    borderRadius: BorderRadius.circular(9999),
                   ),
                 );
               },
