@@ -84,6 +84,9 @@ class _CollapsibleState extends State<Collapsible>
                     ),
                     onPressed: () {
                       setState(() => isOpened = !isOpened);
+                      animationController.isCompleted
+                          ? animationController.reverse()
+                          : animationController.forward();
                     },
                   )
                 ],
