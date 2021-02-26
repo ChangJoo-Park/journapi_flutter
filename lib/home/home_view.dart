@@ -22,6 +22,8 @@ const months = <String>[
 ];
 
 class HomeView extends StatelessWidget {
+  final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomeController>(
@@ -32,6 +34,7 @@ class HomeView extends StatelessWidget {
           slivers: [
             // Appbar
             SliverAppBar(
+              pinned: true,
               backgroundColor: Color(0xfff7fafc),
               title: Row(
                 children: [
@@ -53,6 +56,13 @@ class HomeView extends StatelessWidget {
                   )
                 ],
               ),
+              actions: [
+                IconButton(
+                    icon: Icon(Icons.logout, color: Colors.grey),
+                    onPressed: () {
+                      controller.signout();
+                    }),
+              ],
             ),
             // Composer
             SliverToBoxAdapter(
@@ -67,6 +77,7 @@ class HomeView extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Form(
+                          key: formKey,
                           child: Container(
                             child: Column(
                               children: [
@@ -85,6 +96,11 @@ class HomeView extends StatelessWidget {
                                   minLines: 2,
                                   maxLines: 10,
                                   controller: controller.newBulletController,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'The bullet edit field is required';
+                                    }
+                                  },
                                 ),
                                 SizedBox(height: 8),
                                 DateTimeField(
@@ -123,9 +139,19 @@ class HomeView extends StatelessWidget {
                                       ),
                                     ),
                                     onPressed: () {
-                                      print(
-                                          controller.newBulletController.text);
-                                      print(controller.newDate.value);
+                                      if (formKey.currentState.validate()) {
+                                        controller
+                                            .createBullet(
+                                                controller
+                                                    .newBulletController.text,
+                                                controller.newDate.value)
+                                            .then((value) {
+                                          controller.newBulletController
+                                              .clear();
+                                          controller.newDate.value =
+                                              DateTime.now();
+                                        });
+                                      }
                                     },
                                   ),
                                 ),
@@ -171,6 +197,15 @@ class HomeView extends StatelessWidget {
                               return Bullet(
                                 key: ValueKey('bullet_$id'),
                                 bullet: bullet,
+                                onDeleteClicked: (int bulletId) {
+                                  print(bulletId);
+                                  controller.deleteBullet(bulletId);
+                                },
+                                onSaveClicked: (int bulletId, String bullet,
+                                    DateTime dateTime) {
+                                  controller.updateBullet(
+                                      bulletId, bullet, dateTime);
+                                },
                               );
                             }).toList(),
                           )),
