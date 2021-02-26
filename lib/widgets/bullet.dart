@@ -1,7 +1,6 @@
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 
 class Bullet extends StatefulWidget {
   const Bullet({
@@ -34,7 +33,7 @@ class _BulletState extends State<Bullet> {
   void initState() {
     bulletEditingController =
         TextEditingController(text: widget.bullet['bullet']);
-    selectedDate = DateTime.parse(widget.bullet['published_at']).toLocal();
+    selectedDate = DateTime.parse(widget.bullet['published_at']);
     String hour = selectedDate.hour.toString().length == 1
         ? '0${selectedDate.hour}'
         : '${selectedDate.hour}';
@@ -111,16 +110,15 @@ class _BulletState extends State<Bullet> {
                 if (formKey.currentState.validate()) {
                   setState(() {
                     prevBullet = widget.bullet['bullet'];
-                    prevDate =
-                        DateTime.parse(widget.bullet['published_at']).toLocal();
+                    prevDate = DateTime.parse(widget.bullet['published_at']);
                     widget.bullet['bullet'] = bulletEditingController.text;
-                    widget.bullet['published_at'] = selectedDate.toLocal();
+                    widget.bullet['published_at'] = selectedDate;
                     isEdit = false;
                   });
 
                   widget
                       .onSaveClicked(widget.bullet['id'],
-                          bulletEditingController.text, selectedDate.toLocal())
+                          bulletEditingController.text, selectedDate)
                       .then((bool isOk) {
                     if (!isOk) {
                       widget.bullet['bullet'] = prevBullet;
