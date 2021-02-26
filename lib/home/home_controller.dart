@@ -20,11 +20,35 @@ class HomeController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    api.getBullets().then((Response response) {
+    fetchBullets();
+  }
+
+  Future deleteBullet(int bulletId) {
+    return api.deleteBullet(bulletId).then((value) {
+      fetchBullets();
+    });
+  }
+
+  Future updateBullet(int bulletId, String bullet, DateTime publishedAt) {
+    return api.updateBullet(bulletId, bullet, publishedAt).then((value) {
+      fetchBullets();
+    });
+  }
+
+  Future fetchBullets() {
+    return api.getBullets().then((Response response) {
       bullets.clear();
       bullets.addAll(response.body['data']);
-
-      print(bullets);
     });
+  }
+
+  Future createBullet(String bullet, DateTime publishedAt) {
+    return api.createBullet(bullet, publishedAt).then((value) {
+      fetchBullets();
+    });
+  }
+
+  void signout() {
+    store.remove('TOKEN');
   }
 }
