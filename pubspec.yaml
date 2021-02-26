@@ -30,6 +30,7 @@ dependencies:
   supercharged: ^1.12.0
   date_field: ^1.0.5
   date_format: ^1.0.9
+  url_launcher: ^5.7.10
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
