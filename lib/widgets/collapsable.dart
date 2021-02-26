@@ -21,14 +21,25 @@ class Collapsible extends StatefulWidget {
   _CollapsibleState createState() => _CollapsibleState();
 }
 
+enum _ChildAniProps { color, scale }
+
 class _CollapsibleState extends State<Collapsible>
     with TickerProviderStateMixin {
   bool isOpened = false;
   bool isInitialized = true;
-  AnimationController animationController;
+  AnimationController arrowAnimationController;
+
+  final _tween = MultiTween<_ChildAniProps>()
+    ..add(
+        // top left => top right
+        _ChildAniProps.scale,
+        0.6.tweenTo(1.0),
+        150.milliseconds,
+        Curves.easeIn);
+
   @override
   void initState() {
-    animationController =
+    arrowAnimationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 150));
     isOpened = widget.openInitialized;
     super.initState();
@@ -41,13 +52,13 @@ class _CollapsibleState extends State<Collapsible>
         children: [
           GestureDetector(
             onTap: () {
-              if (animationController.isAnimating) {
+              if (arrowAnimationController.isAnimating) {
                 return;
               }
               setState(() => isOpened = !isOpened);
-              animationController.isCompleted
-                  ? animationController.reverse()
-                  : animationController.forward();
+              arrowAnimationController.isCompleted
+                  ? arrowAnimationController.reverse()
+                  : arrowAnimationController.forward();
             },
             child: Container(
               decoration: BoxDecoration(
@@ -79,14 +90,14 @@ class _CollapsibleState extends State<Collapsible>
                   IconButton(
                     splashRadius: 0.1,
                     icon: AnimatedChevron(
-                      controller: animationController,
+                      controller: arrowAnimationController,
                       isInitialForwarded: isOpened,
                     ),
                     onPressed: () {
                       setState(() => isOpened = !isOpened);
-                      animationController.isCompleted
-                          ? animationController.reverse()
-                          : animationController.forward();
+                      arrowAnimationController.isCompleted
+                          ? arrowAnimationController.reverse()
+                          : arrowAnimationController.forward();
                     },
                   )
                 ],
@@ -105,7 +116,17 @@ class _CollapsibleState extends State<Collapsible>
                     ? Border.all(color: Color(0xff7f9cf5), width: 4)
                     : null,
               ),
-              child: widget.child,
+              child: PlayAnimation<MultiTweenValues<_ChildAniProps>>(
+                tween: _tween,
+                duration: _tween.duration,
+                builder: (context, child, value) {
+                  return Transform.scale(
+                    scale: value.get(_ChildAniProps.scale),
+                    child: child,
+                  );
+                },
+                child: widget.child,
+              ),
             ),
         ],
       ),
