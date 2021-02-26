@@ -1,3 +1,4 @@
+import 'package:date_format/date_format.dart';
 import 'package:get/get.dart';
 
 class JournAPI extends GetConnect {
@@ -24,15 +25,28 @@ class JournAPI extends GetConnect {
     return get('/bullets/$bulletId', headers: headers);
   }
 
-  Future<Response> createBullet() {
-    return post('/bullets', {}, headers: headers);
+  Future<Response> createBullet(String bullet, DateTime dateTime) {
+    Map<String, String> data = {
+      "bullet": bullet,
+      "published_at":
+          formatDate(dateTime, [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn]),
+    };
+
+    print(data);
+    return post('/bullets', data, headers: headers);
   }
 
-  Future<Response> updateBullet(String bulletId) {
-    return patch('/bullets/$bulletId', {}, headers: headers);
+  Future<Response> updateBullet(
+      int bulletId, String bullet, DateTime dateTime) {
+    Map<String, String> data = {
+      "bullet": bullet,
+      "published_at":
+          formatDate(dateTime, [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn]),
+    };
+    return patch('/bullets/$bulletId', data, headers: headers);
   }
 
-  Future<Response> deleteBullet(String bulletId) {
+  Future<Response> deleteBullet(int bulletId) {
     return delete('/bullets/$bulletId', headers: headers);
   }
 }
