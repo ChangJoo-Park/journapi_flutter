@@ -29,8 +29,8 @@ class AuthController extends GetxController {
     }
 
     // Triggered when APIKEY changed
-    store.listenKey('TOKEN', (value) {
-      if (value == null) {
+    store.listenKey('TOKEN', (token) {
+      if (token == null) {
         Get.offAndToNamed('/login');
       } else {
         api = JournAPI(token: token);
