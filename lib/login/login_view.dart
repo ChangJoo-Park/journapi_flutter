@@ -81,7 +81,10 @@ class LoginView extends StatelessWidget {
                       },
                       child: Text(
                         'Register API Key',
-                        style: TextStyle(fontFamily: 'JetBrainsMono'),
+                        style: TextStyle(
+                          fontFamily: 'JetBrainsMono',
+                          letterSpacing: 1,
+                        ),
                       ),
                     ),
                     SizedBox(height: 20),
