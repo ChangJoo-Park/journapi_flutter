@@ -69,6 +69,7 @@ class LoginView extends StatelessWidget {
                       minLines: 2,
                       maxLines: 3,
                       decoration: const InputDecoration(
+                        hintText: 'Paste API Key!',
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.blueAccent),
                         ),
@@ -86,35 +87,38 @@ class LoginView extends StatelessWidget {
                       },
                     ),
                     SizedBox(height: 20),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          primary: Color(0xff63b3ed), elevation: 0),
-                      onPressed: () {
-                        if (!formKey.currentState.validate()) {
-                          return;
-                        }
-                        String token =
-                            authController.tokenEditingController.text.trim();
-
-                        authController.validateToken(token).then((bool isOK) {
-                          if (!isOK) {
-                            Get.snackbar(
-                              'Registration failed',
-                              'Please check API Key!',
-                              icon: Icon(Icons.warning, color: Colors.white),
-                              backgroundColor: Colors.red.withOpacity(0.8),
-                              colorText: Colors.white,
-                              barBlur: 0.0,
-                              snackPosition: SnackPosition.BOTTOM,
-                            );
+                    Container(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            primary: Color(0xff63b3ed), elevation: 0),
+                        onPressed: () {
+                          if (!formKey.currentState.validate()) {
+                            return;
                           }
-                        });
-                      },
-                      child: Text(
-                        'Register API Key',
-                        style: TextStyle(
-                          fontFamily: 'JetBrainsMono',
-                          letterSpacing: 1,
+                          String token =
+                              authController.tokenEditingController.text.trim();
+
+                          authController.validateToken(token).then((bool isOK) {
+                            if (!isOK) {
+                              Get.snackbar(
+                                'Registration failed',
+                                'Please check an API Key!',
+                                icon: Icon(Icons.warning, color: Colors.white),
+                                backgroundColor: Colors.red.withOpacity(0.8),
+                                colorText: Colors.white,
+                                barBlur: 0.0,
+                                snackPosition: SnackPosition.BOTTOM,
+                              );
+                            }
+                          });
+                        },
+                        child: Text(
+                          'Login with an API key',
+                          style: TextStyle(
+                            fontFamily: 'JetBrainsMono',
+                            letterSpacing: 1,
+                          ),
                         ),
                       ),
                     ),
@@ -124,7 +128,7 @@ class LoginView extends StatelessWidget {
                         launch('https://journapi.app/');
                       },
                       child: Text(
-                        'How to find API Key?',
+                        'How to find an API Key?',
                         style: TextStyle(fontFamily: 'JetBrainsMono'),
                       ),
                     )
