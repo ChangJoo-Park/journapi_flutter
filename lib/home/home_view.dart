@@ -73,8 +73,14 @@ class HomeView extends StatelessWidget {
                                 TextFormField(
                                   style: TextStyle(fontFamily: 'JetBrainsMono'),
                                   decoration: const InputDecoration(
-                                    focusedBorder: OutlineInputBorder(),
-                                    enabledBorder: OutlineInputBorder(),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.blueAccent),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.grey),
+                                    ),
                                   ),
                                   minLines: 2,
                                   maxLines: 10,
@@ -86,8 +92,14 @@ class HomeView extends StatelessWidget {
                                       TextStyle(fontFamily: 'JetBrainsMono'),
                                   initialDatePickerMode: DatePickerMode.day,
                                   decoration: const InputDecoration(
-                                    focusedBorder: OutlineInputBorder(),
-                                    enabledBorder: OutlineInputBorder(),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.blueAccent),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.grey),
+                                    ),
                                     suffixIcon: Icon(Icons.calendar_today),
                                   ),
                                   selectedDate: controller.newDate.value,
