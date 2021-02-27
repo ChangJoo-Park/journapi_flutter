@@ -1,16 +1,20 @@
 # journapi
 
-A new Flutter project.
+<h1 align="center">
+    <img align="content-center" src="https://journapi.app/images/logo.svg" />
+    Journapi x Flutter
+</h1>
 
-## Getting Started
+[journapi](https://journapi.app/) is Open source bullet journal to log your life. This app based on [https://github.com/Tahul/journapi](https://github.com/Tahul/journapi)
 
-This project is a starting point for a Flutter application.
+## 🖥 Techstack
 
-A few resources to get you started if this is your first Flutter project:
+- [Flutter](https://flutter.dev/)
+- [GetX](https://pub.dev/packages/get)
+- [get_storage](https://pub.dev/packages/get_storage)
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## 🛒 Google Play and App store
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+I preparing to launch in the store. 
+
+If you want to use from APK. Please check a release.
