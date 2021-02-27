@@ -69,7 +69,7 @@ class LoginView extends StatelessWidget {
                       minLines: 2,
                       maxLines: 3,
                       decoration: const InputDecoration(
-                        hintText: 'Paste API Key!',
+                        hintText: 'Paste your API key!',
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.blueAccent),
                         ),
@@ -87,6 +87,38 @@ class LoginView extends StatelessWidget {
                       },
                     ),
                     SizedBox(height: 20),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        hintText: 'Change if you use self hosted!',
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blueAccent),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                      ),
+                      style: TextStyle(fontFamily: 'JetBrainsMono'),
+                      controller: authController.baseEditingController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please insert base url';
+                        }
+                        return null;
+                      },
+                    ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Base URL. Change if you use self hosted.',
+                        style: TextStyle(
+                          fontFamily: 'JetBrainsMono',
+                          fontSize: 12,
+                          fontStyle: FontStyle.italic,
+                          color: Colors.grey.shade800,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
                     Container(
                       width: double.infinity,
                       child: ElevatedButton(
@@ -98,8 +130,11 @@ class LoginView extends StatelessWidget {
                           }
                           String token =
                               authController.tokenEditingController.text.trim();
-
-                          authController.validateToken(token).then((bool isOK) {
+                          String url =
+                              authController.baseEditingController.text.trim();
+                          authController
+                              .validateToken(url, token)
+                              .then((bool isOK) {
                             if (!isOK) {
                               Get.snackbar(
                                 'Registration failed',

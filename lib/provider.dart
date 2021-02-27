@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 class JournAPI extends GetConnect {
   final String baseUrl;
+
   Map<String, String> headers;
 
   JournAPI({this.baseUrl = 'https://journapi.app/api', String token}) {

@@ -13,7 +13,7 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
-    api = JournAPI(token: store.read('TOKEN'));
+    api = JournAPI(baseUrl: store.read('URL'), token: store.read('TOKEN'));
     super.onInit();
   }
 

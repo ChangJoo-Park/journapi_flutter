@@ -10,16 +10,23 @@ class AuthController extends GetxController {
   RxBool hasAPIKey = false.obs;
   RxBool validAPIKey = false.obs;
   TextEditingController tokenEditingController = TextEditingController();
+  TextEditingController baseEditingController =
+      TextEditingController(text: 'https://journapi.app/api');
 
   @override
-  void onReady() {
+  void onReady() async {
     super.onReady();
     String token = store.read('TOKEN');
+    String baseURL = store.read('URL');
+
+    if (baseURL == null) {
+      await store.write('URL', 'https://journapi.app/api');
+    }
 
     if (token == null) {
       Get.offAndToNamed('/login');
     } else {
-      validateToken(token).then((isOK) {
+      validateToken(baseURL, token).then((isOK) {
         if (isOK) {
           Get.offAndToNamed('/home');
         } else {
@@ -33,21 +40,22 @@ class AuthController extends GetxController {
       if (token == null) {
         Get.offAndToNamed('/login');
       } else {
-        api = JournAPI(token: token);
+        api = JournAPI(baseUrl: store.read('URL'), token: token);
         Get.offAndToNamed('/home');
       }
     });
   }
 
-  Future<bool> validateToken(token) {
-    JournAPI loginTestAPIClient = JournAPI(token: token);
+  Future<bool> validateToken(String url, String token) {
+    JournAPI loginTestAPIClient = JournAPI(baseUrl: url, token: token);
 
     return loginTestAPIClient.getBullets().then((Response response) async {
       if (response.isOk) {
         if (api == null) {
-          api = JournAPI(token: token);
+          api = JournAPI(baseUrl: url, token: token);
         }
         api.setToken(token);
+        await store.write('URL', url);
         await store.write('TOKEN', token);
       }
       return response.isOk;
