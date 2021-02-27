@@ -18,3 +18,9 @@
 I preparing to launch in the store. 
 
 If you want to use from APK. Please check a release.
+
+
+## Screenshots
+
+<img src="https://i.imgur.com/3WGC09e.jpg" height="300">
+<img src="https://i.imgur.com/yqoJ64H_d.webp?maxwidth=760&fidelity=grand" height="300">
