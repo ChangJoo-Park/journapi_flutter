@@ -1,5 +1,3 @@
-# journapi
-
 <h1 align="center">
     <img align="content-center" src="https://journapi.app/images/logo.svg" />
     Journapi x Flutter
